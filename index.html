@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cotação Atualizada</title>
+
+    <!-- Incluindo o Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Cabeçalho estilizado com Bootstrap -->
+        <div class="text-center">
+            <h1 class="display-4">Valor da Cotação Atualizado</h1>
+        </div>
+
+        <!-- Card estilizado com Bootstrap para exibir a cotação -->
+        <div class="card text-center mt-3">
+            <div class="card-body">
+                <h2 id="cotacao" class="card-title">Aguardando atualização...</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluindo o Bootstrap JS e os scripts do Socket.IO -->
+    <script src="https://cdn.socket.io/4.4.0/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        // Conectar ao WebSocket
+        var socket = io('ws://127.0.0.1:5000');
+
+        const elemento = document.querySelector('#cotacao')
+
+        // Evento que escuta a cotação recebida do WebSocket
+        socket.on('cotacao', valor => {
+            valor_anterior = elemento.textContent;
+
+            if (valor > valor_anterior){
+                elemento.classList.add('text-success')
+                elemento.classList.remove('text-danger')
+            }else{
+                elemento.classList.add('text-danger')
+                elemento.classList.remove('text-success')
+            }
+
+            // Atualiza o elemento com o valor recebido
+            elemento.textContent = valor;
+        });
+    </script>
+</body>
+</html>
